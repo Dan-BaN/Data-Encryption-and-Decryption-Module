@@ -14,11 +14,8 @@ This Python script demonstrates encryption and decryption using:
    git clone https://github.com/Dan-BaN/Data-Encryption-and-Decryption-Module.git
    cd Data-Encryption-and-Decryption-Module
 
-OR 
 
 2. Run the script:
-bash
-Copy code
-python encryption_decryption.py
+python main.py
 
 
