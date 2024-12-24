@@ -21,58 +21,73 @@ bash
 Copy code
 python encryption_decryption.py
 
-Project Overview
+# Encryption and Decryption Code Overview
 
-Encryption and Decryption Code Overview
-This document describes the Python implementation of an encryption and decryption program using both symmetric encryption (AES) and asymmetric encryption (RSA). The goal of the program is to encrypt plaintext data, display the ciphertext, and then decrypt it back into its original form to demonstrate the functionality.
+This document describes the Python implementation of an encryption and decryption program using both **symmetric encryption (AES)** and **asymmetric encryption (RSA)**. The goal of the program is to encrypt plaintext data, display the ciphertext, and then decrypt it back into its original form to demonstrate the functionality.
 
-1. Features of the Program
-Supported Encryption Methods:
-Symmetric Encryption (AES):
+---
 
-Uses a password to generate an AES key.
-Encrypts data using the AES algorithm in CBC mode with PKCS7 padding.
-Decrypts the ciphertext back into the original plaintext.
-Asymmetric Encryption (RSA):
+## 1. Features of the Program
 
-Uses RSA public and private key pairs.
-Encrypts data using the public key.
-Decrypts ciphertext using the private key.
-Other Features:
-Generates random salts and initialization vectors (IVs) for added security in AES encryption.
-Handles exceptions and provides meaningful error messages in case of invalid inputs or processing errors.
-2. Modules Used
-The program uses the cryptography library for cryptographic operations. Key modules include:
+### Supported Encryption Methods:
 
-cryptography.hazmat.primitives.ciphers:
-Provides the Cipher, algorithms, and modes classes for AES encryption.
-cryptography.hazmat.primitives.kdf.pbkdf2:
-Used to derive AES keys securely using the PBKDF2 key derivation function.
-cryptography.hazmat.primitives.asymmetric.rsa:
-Handles RSA key generation, encryption, and decryption.
-cryptography.hazmat.primitives:
-Contains tools for hashing and padding.
-3. Implementation Details
-3.1. Symmetric Encryption (AES)
-Key Steps:
-Key and IV Generation:
+#### Symmetric Encryption (AES):
+- Uses a password to generate an AES key.
+- Encrypts data using the AES algorithm in CBC mode with PKCS7 padding.
+- Decrypts the ciphertext back into the original plaintext.
 
-A password provided by the user is combined with a randomly generated salt.
-The PBKDF2 algorithm derives a 256-bit AES key from the password and salt.
-A random 16-byte initialization vector (IV) is generated.
-python
-Copy code
-def generate_aes_key(password):
-    salt = os.urandom(16)
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-    )
-    key = kdf.derive(password.encode())
-    iv = os.urandom(16)
-    return key, iv, salt
+#### Asymmetric Encryption (RSA):
+- Uses RSA public and private key pairs.
+- Encrypts data using the public key.
+- Decrypts ciphertext using the private key.
+
+### Other Features:
+- Generates random salts and initialization vectors (IVs) for added security in AES encryption.
+- Handles exceptions and provides meaningful error messages in case of invalid inputs or processing errors.
+
+---
+
+## 2. Modules Used
+
+The program uses the `cryptography` library for cryptographic operations. Key modules include:
+
+1. **`cryptography.hazmat.primitives.ciphers`**:
+   - Provides the `Cipher`, `algorithms`, and `modes` classes for AES encryption.
+
+2. **`cryptography.hazmat.primitives.kdf.pbkdf2`**:
+   - Used to derive AES keys securely using the PBKDF2 key derivation function.
+
+3. **`cryptography.hazmat.primitives.asymmetric.rsa`**:
+   - Handles RSA key generation, encryption, and decryption.
+
+4. **`cryptography.hazmat.primitives`**:
+   - Contains tools for hashing and padding.
+
+---
+
+## 3. Implementation Details
+
+### 3.1. Symmetric Encryption (AES)
+
+#### Key Steps:
+
+1. **Key and IV Generation**:
+   - A password provided by the user is combined with a randomly generated salt.
+   - The PBKDF2 algorithm derives a 256-bit AES key from the password and salt.
+   - A random 16-byte initialization vector (IV) is generated.
+
+   ```python
+   def generate_aes_key(password):
+       salt = os.urandom(16)
+       kdf = PBKDF2HMAC(
+           algorithm=hashes.SHA256(),
+           length=32,
+           salt=salt,
+           iterations=100000,
+       )
+       key = kdf.derive(password.encode())
+       iv = os.urandom(16)
+       return key, iv, salt
 Encryption:
 
 The plaintext is padded using PKCS7 to make its length a multiple of the block size (128 bits).
@@ -159,40 +174,6 @@ Input plaintext.
 Generate RSA key pairs.
 Encrypt the plaintext using the public key.
 Decrypt the ciphertext using the private key.
-Code for the Main Program:
-python
-Copy code
-def main():
-    print("Encryption and Decryption Program")
-    print("Choose the encryption method:")
-    print("1. Symmetric Encryption (AES)")
-    print("2. Asymmetric Encryption (RSA)")
-    
-    choice = input("Enter your choice (1 or 2): ").strip()
-    
-    if choice == "1":
-        print("\nYou selected Symmetric Encryption (AES).")
-        plaintext = input("Enter the plaintext to encrypt: ").strip()
-        password = input("Enter a password for key generation: ").strip()
-        
-        key, iv, salt = generate_aes_key(password)
-        ciphertext = encrypt_aes(plaintext, key, iv)
-        print(f"\nEncrypted Ciphertext (AES): {ciphertext.hex()}")
-        decrypted_text = decrypt_aes(ciphertext, key, iv)
-        print(f"Decrypted Plaintext: {decrypted_text}")
-    
-    elif choice == "2":
-        print("\nYou selected Asymmetric Encryption (RSA).")
-        plaintext = input("Enter the plaintext to encrypt: ").strip()
-        
-        private_key, public_key = generate_rsa_keys()
-        ciphertext = encrypt_rsa(plaintext, public_key)
-        print(f"\nEncrypted Ciphertext (RSA): {ciphertext.hex()}")
-        decrypted_text = decrypt_rsa(ciphertext, private_key)
-        print(f"Decrypted Plaintext: {decrypted_text}")
-    
-    else:
-        print("Invalid choice. Please restart the program and choose 1 or 2.")
 5. Security Features
 Random Salt and IV:
 
@@ -207,12 +188,36 @@ RSA Security:
 
 RSA encryption uses a 2048-bit key size, which is secure against modern attacks.
 6. Error Handling
-Missing Input: Prompts the user to enter both plaintext and password for AES encryption.
-Invalid Operations: Handles exceptions such as decryption failures or input mismatches.
+Missing Input:
+
+Prompts the user to enter both plaintext and password for AES encryption.
+Invalid Operations:
+
+Handles exceptions such as decryption failures or input mismatches.
 7. Usage Instructions
-Run the program.
+Run the program:
+
+bash
+Copy code
+python encryption_decryption.py
 Select 1 for AES encryption or 2 for RSA encryption.
+
 Follow the prompts to input plaintext and (for AES) a password.
+
 View the encrypted and decrypted results.
 
+License
+This project is open-source and available under the MIT License.
+
+yaml
+Copy code
+
+---
+
+### How to Use on GitHub:
+1. Save the content above as `README.md`.
+2. Add the file to your GitHub repository.
+3. When you push the repository, GitHub will render the file beautifully as the main page of your repository.
+
+Let me know if you need help uploading it! 🚀
 
